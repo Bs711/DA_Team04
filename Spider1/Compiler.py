@@ -1,5 +1,4 @@
 # Display an “OK same as 200” return status
-
 import requests
 url ="http://172.18.58.238/hr2/"
 get = requests.get(url)
@@ -11,7 +10,6 @@ elif get.status_code == 404:
     print("Not Found")
 else:
     print("Error")
-
 
 #Display the header
 #header modifier--------------                            #|
@@ -43,23 +41,17 @@ website = 'http://172.18.58.238/hr2/'
 
 #to scrape the website
 class NewSpider(scrapy.Spider):
-
     name = "new_spider" #name
-
     start_urls = [website] #website you are scraping from
-
-
 
 #this is to extract the images from the Website and store in results.json
 
     def parse(self, response):
-
         css_selector = '//img'
-
         for x in response.xpath(css_selector):
             newsel = '::attr(src)'
             links = x.css(newsel).extract_first()
-            if links.endswith(".jpg") or links.endswith(".jpeg") or links.endswith(".png"):
+            if links.endswith(".jpg"):
                 yield {
                     'Image Link': links
                 }
@@ -67,7 +59,7 @@ class NewSpider(scrapy.Spider):
         class NewSpider(scrapy.Spider):
             name = "new_spider"
 
-        start_urls = ['http://192.168.1.1/index.html']
+        start_urls = website
 
         def parse(self, response):
             css_selector = 'img'
@@ -76,17 +68,12 @@ class NewSpider(scrapy.Spider):
             newsel = '@src'
         yield {'Image Link': x.path(newsel).extract_first(), }
 
-
-
 #this is to check the next page for images and scrap them out
-
         Page_selector = '.next a ::attr(href)'
-
         NextPage = response.css(Page_selector).extract_first()
-
         if NextPage:
-
             yield scrapy.Request(response.urljoin(NextPage),callback=self.parse)
+
 process = CrawlerProcess({
         'FEED_FORMAT': 'json',
         'FEED_URI': 'results.json'})
@@ -96,7 +83,7 @@ process.start()  #
 
 #to read the results.json file and display it when run
 with open('results.json', 'rt') as filehandle:
-    lines = filehandle.readlines()[3:17]
+    lines = filehandle.readlines()[1:15]
 for line in lines:
     print(website + line.replace('{"Image Link": "', "").replace('"}', "").replace(",", ""))
 
@@ -106,9 +93,7 @@ import webbrowser
 for url in testurls:
     webbrowser.open_new_tab(website)
 
-
 # unittesting on the OK response and the User-Agent
-
 import unittest
 class testMyProgram(unittest.TestCase):
     def test_response_200_check(self):
