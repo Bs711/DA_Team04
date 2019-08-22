@@ -56,19 +56,7 @@ class NewSpider(scrapy.Spider):
                     'Image Link': links
                 }
 
-        class NewSpider(scrapy.Spider):
-            name = "new_spider"
-
-        start_urls = website
-
-        def parse(self, response):
-            css_selector = 'img'
-
-        for x in response.css(css_selector):
-            newsel = '@src'
-        yield {'Image Link': x.path(newsel).extract_first(), }
-
-#this is to check the next page for images and scrap them out
+    #this is to check the next page for images and scrap them out
         Page_selector = '.next a ::attr(href)'
         NextPage = response.css(Page_selector).extract_first()
         if NextPage:
